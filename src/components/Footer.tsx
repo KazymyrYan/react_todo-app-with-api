@@ -9,66 +9,73 @@ type Props = {
   onClearCompleted: () => void;
 };
 
+const FILTER_CONFIG = [
+  {
+    type: FilterType.All,
+    href: '#/',
+    label: 'All',
+    dataCy: 'FilterLinkAll',
+  },
+  {
+    type: FilterType.Active,
+    href: '#/active',
+    label: 'Active',
+    dataCy: 'FilterLinkActive',
+  },
+  {
+    type: FilterType.Completed,
+    href: '#/completed',
+    label: 'Completed',
+    dataCy: 'FilterLinkCompleted',
+  },
+];
+
 export const Footer: React.FC<Props> = ({
   activeCount,
   filter,
   hasCompleted,
   setFilter,
   onClearCompleted,
-}) => (
-  <footer className="todoapp__footer" data-cy="Footer">
-    <span className="todo-count" data-cy="TodosCounter">
-      {activeCount} items left
-    </span>
+}) => {
+  //#region handles
+  const handleFilter =
+    (filterParam: FilterType) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault();
+      setFilter(filterParam);
+    };
+  //#endregion
 
-    {/* Active link should have the 'selected' class */}
-    <nav className="filter" data-cy="Filter">
-      <a
-        href="#/"
-        data-cy="FilterLinkAll"
-        className={`filter__link ${filter === 'all' ? 'selected' : ''}`}
-        onClick={e => {
-          e.preventDefault();
-          setFilter('all');
-        }}
+  return (
+    <footer className="todoapp__footer" data-cy="Footer">
+      <span className="todo-count" data-cy="TodosCounter">
+        {activeCount} {activeCount === 1 ? 'item' : 'items'} left
+      </span>
+
+      {/* Active link should have the 'selected' class */}
+      <nav className="filter" data-cy="Filter">
+        {FILTER_CONFIG.map(({ type, href, label, dataCy }) => (
+          <a
+            key={type}
+            href={href}
+            data-cy={dataCy}
+            className={`filter__link ${filter === type ? 'selected' : ''}`}
+            onClick={handleFilter(type)}
+          >
+            {label}
+          </a>
+        ))}
+      </nav>
+
+      {/* this button should be disabled if there are no completed todos */}
+      <button
+        type="button"
+        className="todoapp__clear-completed"
+        disabled={!hasCompleted}
+        data-cy="ClearCompletedButton"
+        onClick={onClearCompleted}
       >
-        All
-      </a>
-
-      <a
-        href="#/active"
-        data-cy="FilterLinkActive"
-        className={`filter__link ${filter === 'active' ? 'selected' : ''}`}
-        onClick={e => {
-          e.preventDefault();
-          setFilter('active');
-        }}
-      >
-        Active
-      </a>
-
-      <a
-        href="#/completed"
-        data-cy="FilterLinkCompleted"
-        className={`filter__link ${filter === 'completed' ? 'selected' : ''}`}
-        onClick={e => {
-          e.preventDefault();
-          setFilter('completed');
-        }}
-      >
-        Completed
-      </a>
-    </nav>
-
-    {/* this button should be disabled if there are no completed todos */}
-    <button
-      type="button"
-      className="todoapp__clear-completed"
-      disabled={!hasCompleted}
-      data-cy="ClearCompletedButton"
-      onClick={onClearCompleted}
-    >
-      Clear completed
-    </button>
-  </footer>
-);
+        Clear completed
+      </button>
+    </footer>
+  );
+};

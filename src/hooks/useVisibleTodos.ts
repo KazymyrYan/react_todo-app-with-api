@@ -4,11 +4,11 @@ import { Todo } from '../types/Todo';
 
 export const useVisibleTodos = (todos: Todo[], filter: FilterType) =>
   useMemo(() => {
-    if (filter === 'active') {
+    if (filter === FilterType.Active) {
       return todos.filter(todo => !todo.completed);
     }
 
-    if (filter === 'completed') {
+    if (filter === FilterType.Completed) {
       return todos.filter(todo => todo.completed);
     }
 

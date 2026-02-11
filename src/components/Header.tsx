@@ -22,36 +22,41 @@ export const Header: React.FC<Props> = ({
   onToggleAll,
   loadingIds,
   totalTodos,
-}) => (
-  <header className="todoapp__header">
-    {/* this button should have `active` class only if all todos are completed */}
-    {totalTodos > 0 && (
-      <button
-        type="button"
-        className={`todoapp__toggle-all ${allComplete ? 'active' : ''}`}
-        data-cy="ToggleAllButton"
-        onClick={onToggleAll}
-        disabled={loadingIds.length > 0}
-      />
-    )}
+}) => {
+  //#region handles
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    onSubmit();
+  };
 
-    {/* Add a todo on form submit */}
-    <form
-      onSubmit={event => {
-        event.preventDefault();
-        onSubmit();
-      }}
-    >
-      <input
-        ref={newTodoRef}
-        data-cy="NewTodoField"
-        type="text"
-        className="todoapp__new-todo"
-        placeholder="What needs to be done?"
-        value={newTitle}
-        onChange={event => onTitleChange(event.target.value)}
-        disabled={isAdding}
-      />
-    </form>
-  </header>
-);
+  //#endregion
+
+  return (
+    <header className="todoapp__header">
+      {/* this button should have `active` class only if all todos are completed */}
+      {totalTodos > 0 && (
+        <button
+          type="button"
+          className={`todoapp__toggle-all ${allComplete ? 'active' : ''}`}
+          data-cy="ToggleAllButton"
+          onClick={onToggleAll}
+          disabled={loadingIds.length > 0}
+        />
+      )}
+
+      {/* Add a todo on form submit */}
+      <form onSubmit={handleSubmit}>
+        <input
+          ref={newTodoRef}
+          data-cy="NewTodoField"
+          type="text"
+          className="todoapp__new-todo"
+          placeholder="What needs to be done?"
+          value={newTitle}
+          onChange={event => onTitleChange(event.target.value)}
+          disabled={isAdding}
+        />
+      </form>
+    </header>
+  );
+};
