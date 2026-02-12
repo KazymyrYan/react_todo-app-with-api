@@ -105,7 +105,6 @@ export const TodoItem: React.FC<Props> = ({
         className={`todo__loader ${showLoader ? 'is-active' : ''}`}
       ></div>
 
-      {/* Remove button appears only on hover */}
       {!isEditing && (
         <button
           type="button"
